@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 내역</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .history-container { max-width: 600px; margin: 0 auto; }
+        h2 { font-size: 22px; font-weight: 700; color: #1e293b; margin-bottom: 20px; }
+        .order-box { border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 20px; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .order-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.95em; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px; color: #64748b; }
+        .product-line { font-size: 14px; color: #334155; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+
+        /* 💡 관리자 연동 배송 상태 뱃지 고유 디자인 스타일 */
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .status-ready { background-color: #eff6ff; color: #1d4ed8; }   /* 배송준비중 (블루) */
+        .status-shipping { background-color: #fff7ed; color: #c2410c; }/* 배송중 (오렌지) */
+        .status-done { background-color: #f0fdf4; color: #15803d; }    /* 배송완료 (그린) */
+
+        .total-price-bar { margin-top: 15px; text-align: right; font-weight: 800; color: #10b981; font-size: 1.1em; }
+        a { color: #2563eb; text-decoration: none; font-weight: 500; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<div class="history-container">
+    <h2>📜 나의 주문 결제 내역</h2>
+    <p><a href="/mypage">← 마이페이지로 돌아가기</a></p>
+    <hr style="border: 0; height: 1px; background: #e2e8f0; margin-bottom: 20px;">
+
+    <% if (!orders || orders.length === 0) { %>
+        <p style="color: #94a3b8; text-align: center; padding: 40px 0;">주문 내역이 존재하지 않습니다.</p>
+    <% } else { %>
+        <% orders.forEach(order => { %>
+            <div class="order-box">
+                <div class="order-header">
+                    <div>
+                        📅 결제 일시: <%= order.createdAt %> | 주문번호: #<%= order.orderId %>
+                    </div>
+
+                    <% if (order.status === '배송완료') { %>
+                        <span class="status-badge status-done">✓ 배송완료</span>
+                    <% } else if (order.status === '배송중') { %>
+                        <span class="status-badge status-shipping">🚚 배송중</span>
+                    <% } else { %>
+                        <span class="status-badge status-ready">📦 배송준비중</span>
+                    <% } %>
+                </div>
+
+                <% order.items.forEach(item => { %>
+                    <div class="product-line">
+                        <span style="font-size: 16px; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;"><%= item.emoji %></span>
+                        <strong><%= item.name %></strong> - (₩<%= item.price.toLocaleString() %>) × <%= item.quantity %>개
+                    </div>
+                <% }) %>
+
+                <div class="total-price-bar">
+                    총 결제 금액: ₩<%= order.totalPrice.toLocaleString() %>
+                </div>
+            </div>
+        <% }) %>
+    <% } %>
+</div>
+</body>
+</html>

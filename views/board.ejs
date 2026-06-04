@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객센터 게시판</title>
+    <style>
+        /* 💡 네이버 카페 리스트 정밀 복각 CSS */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, "Apple SD Gothic Neo", sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: #f4f6fa;
+            color: #333;
+        }
+
+        .board-container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #e3e7ee;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 10px;
+        }
+        .btn-home { color: #666; text-decoration: none; font-size: 13px; font-weight: 500; }
+        .btn-home:hover { text-decoration: underline; color: #333; }
+
+        .btn-write {
+            background-color: #2563eb; color: white !important; padding: 7px 14px;
+            border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px;
+        }
+        .btn-write:hover { background-color: #1d4ed8; }
+
+        .cafe-list-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cafe-list-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 10px;
+            border-bottom: 1px solid #f2f3f5;
+            font-size: 14px;
+            transition: background-color 0.1s;
+        }
+        .cafe-list-item:hover {
+            background-color: #fafafa;
+        }
+
+        .col-title {
+            flex-grow: 1;
+            padding-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .post-title-link {
+            color: #333;
+            text-decoration: none;
+        }
+        .post-title-link:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* 💡 댓글 횟수를 가독성 있게 표현하기 위한 포인트 핑크 배지 스타일 */
+        .comment-count-badge {
+            color: #db2777; /* 위시리스트와 깔끔하게 매칭되는 루비 핑크 컬러 */
+            font-weight: bold;
+            margin-left: 6px;
+            font-size: 13px;
+        }
+
+        .col-writer {
+            width: 130px;
+            text-align: right;
+            color: #333;
+            font-weight: 500;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 3px;
+        }
+        .cafe-badge {
+            color: #10b981;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .col-date {
+            width: 70px;
+            text-align: right;
+            color: #666;
+            font-size: 13px;
+            margin-left: 15px;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="board-container">
+    <header>
+        <h2>🙋‍♂️ 고객센터 게시판</h2>
+        <div class="board-header">
+            <a href="/" class="btn-home">🏠 홈으로</a>
+            <a href="/board/new" class="btn-write">✏️ 문의글 쓰기</a>
+        </div>
+    </header>
+
+    <main class="cafe-list-container">
+        <% if (posts && posts.length > 0) { %>
+            <% posts.forEach(post => { %>
+
+                <% if (!post.parent_id) { %>
+                    <div class="cafe-list-item">
+
+                        <div class="col-title">
+                            <a href="/board/view/<%= post.id %>" class="post-title-link">
+                                <%= post.title %>
+                            </a>
+
+                            <% if (post.comment_count > 0) { %>
+                                <span class="comment-count-badge">[<%= post.comment_count %>]</span>
+                            <% } %>
+                        </div>
+
+                        <div class="col-writer">
+                            <span><%= post.author || '익명' %></span>
+                            <span class="cafe-badge">🌱</span>
+                        </div>
+
+                        <div class="col-date">
+                            <%= post.created_at ? post.created_at.substring(11, 16) : '14:18' %>
+                        </div>
+
+                    </div>
+                <% } %>
+
+            <% }) %>
+        <% } else { %>
+            <div style="text-align: center; color: #94a3b8; padding: 50px 0; font-size: 14px;">
+                📭 등록된 고객 문의 사항이 없습니다.
+            </div>
+        <% } %>
+    </main>
+
+    <footer>
+        &copy; 2026 고객센터 시스템. All rights reserved.
+    </footer>
+</div>
+
+</body>
+</html>

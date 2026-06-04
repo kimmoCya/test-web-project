@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6c73c82a-7588-4c19-be8c-6d1c28723bfa" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2xboMhLKVmDq0yEjmdlvFziGoRj" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Node.js.app.js.executor": "Run",
+    "Node.js.www.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/usr/강의노트/강의2025/1학기/3학년 웹 프로그래밍/project/board-project-upgrade",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "terminal",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6c73c82a-7588-4c19-be8c-6d1c28723bfa" name="Changes" comment="" />
+      <created>1748216088170</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1748216088170</updated>
+      <workItem from="1748216089438" duration="208000" />
+      <workItem from="1748216306994" duration="15431000" />
+      <workItem from="1748238579246" duration="1866000" />
+      <workItem from="1748254796507" duration="5427000" />
+      <workItem from="1748260663653" duration="1323000" />
+      <workItem from="1748299523300" duration="3345000" />
+      <workItem from="1748311295335" duration="100000" />
+      <workItem from="1748311403992" duration="735000" />
+      <workItem from="1748312155758" duration="453000" />
+      <workItem from="1748312631703" duration="27000" />
+      <workItem from="1748312666199" duration="121000" />
+      <workItem from="1748312795769" duration="276000" />
+      <workItem from="1748313404422" duration="125000" />
+      <workItem from="1748332360085" duration="251000" />
+      <workItem from="1748332643350" duration="3594000" />
+      <workItem from="1748336499951" duration="99000" />
+      <workItem from="1748387593060" duration="98000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TerminalProjectOptionsProvider">
+    <option name="startDirectory" value="D:\usr\강의노트\강의2025\1학기\3학년 웹 프로그래밍\project\board-project-upgrade" />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="javascript:npm:ejs" />
+  </component>
+</project>

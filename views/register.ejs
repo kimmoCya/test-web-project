@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 450px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="password"], input[type="tel"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0 12px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .gender-group {
+            margin: 10px 0 20px 0;
+        }
+        .gender-group input {
+            width: auto;
+            margin-right: 5px;
+        }
+        button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<a href="/" style="display:inline-block; margin-bottom:15px; color:#2563eb; text-decoration:underline;">🏠 메인으로 돌아가기</a>
+
+<h2>회원가입</h2>
+<form action="/user/register" method="post">
+    <label for="username">아이디</label>
+    <input type="text" id="username" name="username" placeholder="예: hong2018" required>
+
+    <label for="name">이름</label>
+    <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
+
+    <label for="birth">생년월일</label>
+    <input type="text" id="birth" name="birth" placeholder="예: 19910327">
+
+    <label for="email">이메일</label>
+    <input type="email" id="email" name="email" placeholder="예: user@example.com" required>
+
+    <label for="phone">연락처</label>
+    <input type="tel" id="phone" name="phone" placeholder="휴대폰 '-' 없이 숫자만 입력하세요">
+
+    <label for="address">주소</label>
+    <input type="text" id="address" name="address" placeholder="주소를 입력해주세요">
+
+    <button type="submit">가입하기</button>
+</form>
+
+</body>
+</html>

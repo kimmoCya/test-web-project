@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 컨트롤타워</title>
+    <style>
+        body { font-family: sans-serif; margin: 30px; background-color: #f8fafc; }
+        h2 { color: #1e293b; margin-bottom: 5px; }
+        p { margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-radius: 8px; overflow: hidden; margin-bottom: 25px; }
+        th, td { border: 1px solid #e2e8f0; padding: 14px; text-align: center; }
+        th { background-color: #f1f5f9; color: #475569; font-weight: bold; }
+        tr:hover { background-color: #f8fafc; }
+        select { padding: 6px 10px; border-radius: 4px; border: 1px solid #cbd5e1; font-family: inherit; cursor: pointer; background-color: #fff; }
+
+        /* 💡 하단 일괄 수정용 녹색 버튼 스타일 추가 */
+        .btn-batch-submit {
+            display: block;
+            width: 250px;
+            margin: 20px auto;
+            padding: 12px 20px;
+            background-color: #10b981;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+            transition: background 0.2s;
+        }
+        .btn-batch-submit:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body>
+<h2>📜 전 회원 배송 상태 제어 상황실</h2>
+<p><a href="/admin" style="color: #2563eb; text-decoration: none; font-weight: bold;">← 대시보드로 복귀</a></p>
+
+<!-- 💡 테이블 전체를 하나의 대형 일괄 수정 폼태그로 묶습니다. -->
+<form action="/admin/orders/update-batch" method="POST" onsubmit="return confirm('선택하신 모든 주문 건의 배송 단계를 한 번에 수정하시겠습니까?\n배송완료로 선택된 건은 상황실 대장에서 자동 정리됩니다.')">
+    <table>
+        <thead>
+        <tr>
+            <th>주문번호</th>
+            <th>주문 고객 (계정 ID)</th>
+            <th>총 결제액</th>
+            <th>주문 일시</th>
+            <th>현재 배송 단계</th>
+            <th>상태 변경 명령</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if (orders && orders.length > 0) { %>
+            <% orders.forEach(o => { %>
+                <tr>
+                    <td>
+                        #<%= o.order_id %>
+                        <!-- 💡 백엔드 배열 수신을 위한 hidden 식별자 바인딩 -->
+                        <input type="hidden" name="orderIds" value="<%= o.order_id %>">
+                    </td>
+                    <td><strong><%= o.user_name %></strong> (<%= o.username %>)</td>
+                    <td style="font-weight: bold; color: #10b981;">₩<%= o.total_price.toLocaleString() %></td>
+                    <td><%= o.created_at %></td>
+                    <td style="font-weight: bold; color: #2563eb;"><%= o.status %></td>
+                    <td>
+                        <!-- 💡 자동 제출(onchange)을 걷어내고 순수 상태값만 담아 보낼 수 있도록 세팅 -->
+                        <select name="newStatuses">
+                            <option value="배송준비중" <%= o.status === '배송준비중' ? 'selected' : '' %>>배송준비중</option>
+                            <option value="배송중" <%= o.status === '배송중' ? 'selected' : '' %>>배송중</option>
+                            <option value="배송완료" <%= o.status === '배송완료' ? 'selected' : '' %>>배송완료 (목록에서 삭제)</option>
+                        </select>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } else { %>
+            <tr>
+                <td colspan="6" style="color: #94a3b8; padding: 40px; font-weight: 500;">현재 처리해야 할 미완결 고객 주문 내역이 한 건도 없습니다. 🎉</td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <!-- 💡 목록에 잔여 주문이 있을 때만 하단 일괄 처리 버튼 활성화 -->
+    <% if (orders && orders.length > 0) { %>
+        <button type="submit" class="btn-batch-submit">⚙️ 위의 설정 상태로 싹 다 수정하기</button>
+    <% } %>
+</form>
+
+</body>
+</html>
