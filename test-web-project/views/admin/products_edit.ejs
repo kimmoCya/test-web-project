@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>과일 상품 정보 수정</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif; -webkit-font-smoothing: antialiased; padding: 40px; background-color: #f8fafc; }
+        .form-card { max-width: 480px; margin: 0 auto; background: white; padding: 35px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h2 { font-size: 18px; margin-top:0; margin-bottom:25px; border-left: 5px solid #10b981; padding-left: 10px; color: #1e293b; }
+        label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 6px; }
+        input, textarea, select { width: 100%; padding: 10px; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; margin-bottom: 16px; color: #334155; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+        .btn-submit { background-color: #10b981; color: white; border: none; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; }
+        .btn-submit:hover { background-color: #059669; }
+        .btn-back { display: block; text-align: center; margin-top: 15px; color: #64748b; text-decoration: none; font-size: 13px; }
+        .btn-back:hover { text-decoration: underline; color: #1e293b; }
+    </style>
+</head>
+<body>
+<div class="form-card">
+    <h2>✏️ 과일 상품 정보 수정</h2>
+    <form action="/admin/products/edit/<%= product.id %>" method="post">
+        <label>과일 이름</label>
+        <input type="text" name="name" value="<%= product.name %>" required>
+        <label>가격 (원)</label>
+        <input type="number" name="price" value="<%= product.price %>" required>
+        <label>대표 이모지 (아이콘)</label>
+        <input type="text" name="emoji" value="<%= product.emoji %>" required>
+        <label>상세 설명</label>
+        <textarea name="description" rows="3"><%= product.description %></textarea>
+        <label>이미지 파일명</label>
+        <input type="text" name="image" value="<%= product.image %>">
+        <label>속성 고유상태</label>
+        <select name="status">
+            <option value="일반" <%= product.status === '일반' ? 'selected' : '' %>>일반 진열 상품</option>
+            <option value="메인 추천 노출중" <%= product.status === '메인 추천 노출중' ? 'selected' : '' %>>🌟 메인 추천 노출중</option>
+        </select>
+        <button type="submit" class="btn-submit">💚 수정 내용 반영하기</button>
+        <a href="/admin/products" class="btn-back">취소하고 대장으로 가기</a>
+    </form>
+</div>
+</body>
+</html>

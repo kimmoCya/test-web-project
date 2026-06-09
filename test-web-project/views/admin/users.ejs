@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>전 고객 회원 관리 목록</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <style>
+        body { font-family: sans-serif; margin: 40px; background-color: #f8fafc; }
+        .admin-title { font-size: 26px; font-weight: bold; color: #1e1b4b; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .back-link { display: inline-block; color: #4338ca; text-decoration: none; margin-bottom: 25px; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+
+        .user-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
+        .user-table th { background-color: #f1f5f9; color: #334155; font-weight: bold; padding: 14px; text-align: center; border-bottom: 2px solid #e2e8f0; }
+        .user-table td { padding: 14px; text-align: center; border-bottom: 1px solid #e2e8f0; color: #334155; vertical-align: middle; }
+        .user-table tr:hover { background-color: #f8fafc; }
+
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 13px; color: white; }
+        .badge-user { background-color: #3b82f6; }
+        .badge-admin { background-color: #ef4444; }
+
+        select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 14px; background: white; }
+        .btn-kick { padding: 6px 14px; background-color: #dc2626; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-kick:hover { background-color: #b91c1c; }
+        .inline-form { margin: 0; padding: 0; display: inline-block; }
+    </style>
+</head>
+<body>
+
+<div class="admin-title">👥 전 고객 회원 관리 목록</div>
+<a href="/admin" class="back-link">← 대시보드로 복귀</a>
+
+<table class="user-table">
+    <thead>
+    <tr>
+        <th style="width: 8%;">번호</th>
+        <th style="width: 15%;">아이디</th>
+        <th style="width: 15%;">이름</th>
+        <th style="width: 25%;">이메일</th>
+        <th style="width: 12%;">현재 권한</th>
+        <th style="width: 15%;">등급 변경</th>
+        <th style="width: 10%;">처분</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% if (users && users.length > 0) { %>
+        <% users.forEach(function(row) { %>
+            <tr>
+                <td><%= row.id %></td>
+                <td style="font-weight: bold;"><%= row.username %></td>
+                <td><%= row.name %></td>
+                <td><%= row.email || '미등록' %></td>
+                <td>
+                    <% if (row.role === 'ADMIN') { %>
+                        <span class="badge badge-admin">ADMIN</span>
+                    <% } else { %>
+                        <span class="badge badge-user">USER</span>
+                    <% } %>
+                </td>
+
+                <td>
+                    <form action="/admin/users/update-role" method="POST" class="inline-form">
+                        <input type="hidden" name="userId" value="<%= row.id %>">
+                        <select name="newRole" onchange="this.form.submit()">
+                            <option value="USER" <%= row.role === 'USER' ? 'selected' : '' %>>일반 유저(USER)</option>
+                            <option value="ADMIN" <%= row.role === 'ADMIN' ? 'selected' : '' %>>관리자(ADMIN)</option>
+                        </select>
+                    </form>
+                </td>
+
+                <td>
+                    <form action="/admin/users/delete" method="POST" class="inline-form" onsubmit="return confirm('🚨 정말로 해당 회원을 강제 탈퇴시키겠습니까?')">
+                        <input type="hidden" name="userId" value="<%= row.id %>">
+                        <button type="submit" class="btn-kick">강퇴</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+    <% } else { %>
+        <tr>
+            <td colspan="7" style="color: #64748b; padding: 30px;">가입된 회원 내역이 존재하지 않습니다.</td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>
+
+</body>
+</html>

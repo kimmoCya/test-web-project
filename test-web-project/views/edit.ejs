@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글 수정 - 고객센터</title>
+    <style>
+        /* 💡 기존 답글 폼과 일체감을 주는 네이버 카페풍 UI 디자인 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, "Apple SD Gothic Neo", sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: #f4f6fa;
+            color: #334155;
+        }
+
+        .edit-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            border: 1px solid #e3e7ee;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-left: 5px solid #10b981; /* 싱그러운 초록 포인트 배너 */
+            padding-left: 12px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* 폼 입력 상자 디자인 단일화 조율 */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+            background-color: #fff;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        /* 하단 버튼 킷 구성 */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-submit {
+            background-color: #10b981; /* 네이버 시그니처 초록 버튼 */
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.15);
+            transition: background 0.2s;
+        }
+        .btn-submit:hover {
+            background-color: #059669;
+        }
+
+        .btn-back {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .btn-back:hover {
+            color: #1e293b;
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="edit-container">
+    <h2>✏️ 글 수정</h2>
+
+    <!-- 기존 라우터 처리 경로 명확하게 유지 매핑 -->
+    <form action="/board/edit/<%= post.id %>" method="post">
+
+        <label for="title">📝 제목</label>
+        <input type="text" id="title" name="title" placeholder="수정할 제목을 입력하세요" value="<%= post.title %>" required>
+
+        <label for="content">💬 내용</label>
+        <textarea id="content" name="content" placeholder="수정할 내용을 입력하세요" rows="12" required><%= post.content %></textarea>
+
+        <div class="form-actions">
+            <!-- 상세 글 보기 화면 주소 흐름 유지 전환 -->
+            <a href="/board/view/<%= post.id %>" class="btn-back">← 원글로 돌아가기</a>
+            <button type="submit" class="btn-submit">💚 수정 완료</button>
+        </div>
+    </form>
+</div>
+
+<footer>
+    &copy; 2026 고객센터 시스템. All rights reserved.
+</footer>
+
+</body>
+</html>

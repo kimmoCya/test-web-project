@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>전체 상품 목록</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <style>
+        /* 💡 가로로 카드가 겹치거나 삐져나가는 현상을 완벽히 방지하는 그리드 레이아웃 */
+        .product-grid {
+            display: grid;
+            /* 화면 크기에 맞춰서 카드가 자동으로 다음 줄로 떨어지도록 자동 조절 (최소 200px 폭 보장) */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 💡 개별 과일 출력 박스 디자인 (서로 겹치지 않도록 테두리와 여백 고정) */
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            box-sizing: border-box; /* 내부 패딩 때문에 박스가 늘어나서 겹치는 현상 차단 */
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-card h3 {
+            margin: 10px 0 5px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .product-card strong {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+            color: #000;
+        }
+
+        /* 💡 두 번째 그림 양식과 100% 일치시킨 세로 2단 버튼 스택 */
+        .action-forms {
+            display: flex;
+            flex-direction: column;
+            gap: 5px; /* 버튼 사이의 간격 */
+        }
+
+        /* 상단: 장바구니 담기 버튼 (연한 회색 바탕) */
+        .cart-button {
+            width: 100%;
+            background: #eaeaea;
+            color: #333;
+            border: 1px solid #ccc;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        .cart-button:hover {
+            background: #dfdfdf;
+        }
+
+        /* 하단: 위시리스트 추가 버튼 (루비 핫핑크 바탕) */
+        .wish-button {
+            width: 100%;
+            background: #db2777; /* 요구하신 두 번째 그림의 진한 핑크 컬러 */
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            font-family: inherit;
+        }
+        .wish-button:hover {
+            background: #be185d;
+        }
+    </style>
+</head>
+<body>
+
+<header style="display: flex; justify-content: flex-end; padding: 10px; align-items: center;">
+    <% if (!user) { %>
+        <a href="/login" style="color: #fff; background-color: #facc15; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold;">로그인</a>
+        <a href="/user/register" style="color: #fff; background-color: #facc15; padding: 6px 12px; border-radius: 5px; text-decoration: none; margin-left: 5px; font-size: 14px; font-weight: bold;">회원가입</a>
+    <% } else { %>
+        <span style="margin-right: 15px; font-weight: bold;"><%= user.username %>님 환영합니다!</span>
+
+        <% if (user.role === 'ADMIN') { %>
+            <a href="/admin" style="
+                color: #fff !important;
+                background-color: #ef4444;
+                padding: 6px 12px;
+                border-radius: 5px;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 14px;
+                font-weight: bold;
+                margin-right: 5px;
+            ">👑 관리자 페이지</a>
+        <% } %>
+
+        <a href="/mypage" style="
+            color: #fff !important;
+            background-color: #10b981;
+            padding: 6px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 5px;
+        ">마이페이지</a>
+
+        <a href="/user/logout" style="color: #fff; background-color: #ef4444; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold;">로그아웃</a>
+    <% } %>
+</header>
+
+<hr>
+
+<header>
+    <h1>📦 전체 상품 목록</h1>
+    <nav>
+        <a href="/">홈</a>
+        <a href="/products">상품목록</a>
+        <a href="/cart">장바구니</a>
+        <a href="/board">고객센터</a>
+    </nav>
+</header>
+
+<section class="product-grid">
+    <% products.forEach(product => { %>
+        <div class="product-card">
+            <img src="/images/<%= product.image || 'default.jpg' %>" alt="<%= product.name %>">
+            <h3><%= product.emoji || '🍎' %> <%= product.name %></h3>
+            <strong>₩<%= product.price.toLocaleString() %></strong>
+
+            <div class="action-forms">
+                <form action="/cart/add" method="POST" style="margin: 0; padding: 0;">
+                    <input type="hidden" name="productId" value="<%= product.id %>">
+                    <button type="submit" class="cart-button">🛒 장바구니 담기</button>
+                </form>
+
+                <form action="/wishlist/add" method="POST" style="margin: 0; padding: 0;">
+                    <input type="hidden" name="productId" value="<%= product.id %>">
+                    <button type="submit" class="wish-button">💗 위시리스트 추가</button>
+                </form>
+            </div>
+        </div>
+    <% }) %>
+</section>
+
+<footer style="text-align: center; padding: 30px; margin-top: 20px; border-top: 1px solid #eee;">
+    <p><a href="/products" style="color: #2563eb; text-decoration: underline; font-weight: bold;">← 상품 목록 홈으로 돌아가기</a></p>
+</footer>
+
+</body>
+</html>
