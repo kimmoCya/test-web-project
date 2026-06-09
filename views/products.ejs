@@ -3,234 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상품목록</title>
+    <title>Refresh Beverage Mall - 상품목록</title>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <style>
+        /* 💡 현대적인 이커머스 전용 기본 베이스 스타일링 (메인 홈과 100% 일치) */
         body {
-            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, sans-serif;
             margin: 0; padding: 0;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: #f8fafc; /* 💡 메인 홈과 동일한 깔끔한 화이트/그레이 배경 */
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ⚠️ 이 아래 스타일은 정우님의 원래 코드를 단 한 글자도 건드리지 않고 원본 보존합니다! */
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+        /* 💡 1단: 쇼핑몰 유틸리티 팝 바 (고급 브랜드몰 사양) */
+        .top-utility-bar {
+            background-color: #0f172a;
+            color: #cbd5e1;
+            padding: 10px 60px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
         }
-        .info-bar {
-            background: white;
-            padding: 14px 20px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 25px;
+        .user-welcome {
+            font-weight: 500;
+            color: #94a3b8;
+        }
+        .user-welcome strong {
+            color: #38bdf8;
+        }
+        .top-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .top-link:hover {
+            color: #ffffff;
+        }
+        .badge-admin {
+            background-color: #ef4444;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
             font-weight: bold;
-            font-size: 1.05em;
+        }
+
+        /* 💡 2단: 메인 내비게이션 헤더 바 (GNB 프레임 구조) */
+        .main-gnb-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         }
-        .info-bar a {
-            color: #2563eb;
-            text-decoration: underline;
-            font-size: 0.95em;
+        .brand-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.5px;
+        }
+        .brand-logo span {
+            color: #0ea5e9;
+        }
+        .nav-menu-group {
+            display: flex;
+            gap: 45px;
+        }
+        .nav-item {
+            color: #475569;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+        .nav-item:hover, .nav-item.active {
+            color: #0ea5e9;
+        }
+        /* 현재 상품목록 탭 활성화 하단 바 표시 */
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 3px;
+            background-color: #0ea5e9;
+            border-radius: 2px;
         }
 
-        .product-grid {
+        /* 💡 레이아웃 메인 레이어 메인 영역 */
+        .mall-contents-body {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 60px;
+        }
+
+        /* 알림 및 정보 스택 바 디자인 */
+        .info-bar-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .info-bar {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-weight: bold;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+        .info-bar a {
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .info-bar a:hover {
+            color: #0284c7;
+            text-decoration: underline;
+        }
+
+        /* 💡 상품 리스트 섹션 헤더 디자인 (메인 홈과 일치) */
+        .section-headline-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .section-headline-bar h3 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        /* 💡 실물 커머스 기반 스마트 4열 카드 그리드 레이아웃 */
+        .shopping-item-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 25px;
             margin-top: 20px;
         }
-        .product-card {
+        .shopping-card-box {
+            background-color: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            background: #fff;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-        }
-        .product-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-            background-color: #f8fafc;
-        }
-        .product-card h3 {
-            font-size: 16px;
-            color: #1e293b;
-            margin: 12px 0 6px 0;
-        }
-        .product-card p {
-            font-size: 13px;
-            color: #64748b;
-            margin: 0 0 10px 0;
-            height: 38px;
             overflow: hidden;
-        }
-        .product-card strong {
-            display: block;
-            font-size: 15px;
-            color: #0f172a;
-            margin-bottom: 12px;
-        }
-
-        .action-forms {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .cart-button {
+        .shopping-card-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+        .card-img-wrapper {
             width: 100%;
-            background: #eaeaea;
-            color: #333;
-            border: 1px solid #ccc;
-            padding: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
+            height: 220px;
+            background-color: #f1f5f9;
+            overflow: hidden;
+            position: relative;
         }
-        .cart-button:hover {
-            background: #dfdfdf;
-        }
-        .wish-button {
+        .card-img-wrapper img {
             width: 100%;
-            background: #db2777;
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
         }
-        .wish-button:hover {
-            background: #be185d;
+        .shopping-card-box:hover .card-img-wrapper img {
+            transform: scale(1.04);
         }
 
-        footer {
-            margin-top: 60px;
-            text-align: center;
+        /* 정보 렌더링 구역 */
+        .card-info-content {
             padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .card-info-content h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 6px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-info-content p {
             font-size: 13px;
+            color: #64748b;
+            margin: 0 0 15px 0;
+            line-height: 1.4;
+            height: 36px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card-price-line {
+            margin-top: auto;
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 15px;
+        }
+
+        /* 버튼 그룹 스택 디자인 */
+        .card-btn-group {
+            display: flex;
+            gap: 6px;
+        }
+        .btn-action-cart {
+            flex-grow: 1;
+            background-color: #0f172a;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-action-cart:hover {
+            background-color: #1e293b;
+        }
+        .btn-action-wish {
+            background-color: #fff;
+            color: #cbd5e1;
+            border: 1px solid #e2e8f0;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-action-wish:hover {
+            border-color: #fda4af;
+            color: #f43f5e;
+            background-color: #fff1f2;
+        }
+
+        /* 💡 하단 푸터 레이아웃 */
+        .mall-footer-layer {
+            background-color: #0f172a;
             color: #94a3b8;
-            border-top: 1px solid #e2e8f0;
+            padding: 40px 60px;
+            margin-top: 100px;
+            text-align: center;
+            font-size: 14px;
+            border-top: 1px solid #1e293b;
+        }
+        .mall-footer-layer p {
+            margin: 0;
         }
     </style>
 </head>
 <body>
 
-<!-- 💡 [검은 박스 1단]: index.ejs의 오리지널 구조와 인라인 스타일 100% 동일하게 이식 -->
-<header style="display: flex; justify-content: flex-end; padding: 10px; align-items: center;">
-    <% if (!user) { %>
-        <a href="/login" style="color: #fff; background-color: #facc15; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold;">로그인</a>
-        <a href="/user/register" style="color: #fff; background-color: #facc15; padding: 6px 12px; border-radius: 5px; text-decoration: none; margin-left: 5px; font-size: 14px; font-weight: bold;">회원가입</a>
-    <% } else { %>
-        <span style="margin-right: 15px; font-weight: bold;"><%= user.username %>님 환영합니다!</span>
-
+<div class="top-utility-bar">
+    <% if (user) { %>
+        <span class="user-welcome">안녕하세요, <strong><%= user.username %></strong>님!</span>
         <% if (user.role === 'ADMIN') { %>
-            <a href="/admin" style="
-                color: #fff !important;
-                background-color: #ef4444;
-                padding: 6px 12px;
-                border-radius: 5px;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 14px;
-                font-weight: bold;
-                margin-right: 5px;
-            ">👑 관리자 페이지</a>
+            <a href="/admin" class="top-link font-bold"><span class="badge-admin">ADMIN</span> 관리실</a>
         <% } %>
-
-        <a href="/mypage" style="
-            color: #fff !important;
-            background-color: #10b981;
-            padding: 6px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            font-weight: bold;
-            margin-right: 5px;
-        ">마이페이지</a>
-
-        <a href="/user/logout" style="color: #fff; background-color: #ef4444; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold;">로그아웃</a>
+        <a href="/mypage" class="top-link">마이페이지</a>
+        <a href="/user/logout" class="top-link" style="color: #f43f5e;">로그아웃</a>
+    <% } else { %>
+        <span class="user-welcome">방문객님 환영합니다!</span>
+        <a href="/user/login" class="top-link">로그인</a>
+        <a href="/user/register" class="top-link">회원가입</a>
     <% } %>
-</header>
+</div>
 
-<!-- 💡 [여백 - 수평선 - 여백]: index.ejs와 화면 규격을 맞추는 원본 수평선 태그 -->
-<hr>
-
-<!-- 💡 [검은 박스 2단]: 양식은 완벽히 똑같이 하되 타이틀 텍스트만 '상품 목록'으로 적용 -->
-<header>
-    <h1>🛍️ 상품 목록</h1>
-    <nav>
-        <a href="/">홈</a>
-        <a href="/products">상품목록</a>
-        <a href="/cart">장바구니</a>
-        <a href="/board">고객센터</a>
+<header class="main-gnb-header">
+    <a href="/" class="brand-logo">🥤 Refresh <span>Beverage</span></a>
+    <nav class="nav-menu-group">
+        <a href="/" class="nav-item">홈</a>
+        <a href="/products" class="nav-item active">상품목록</a>
+        <a href="/cart" class="nav-item">장바구니</a>
+        <a href="/board" class="nav-item">고객센터</a>
     </nav>
 </header>
 
-<!-- ⚠️ 여기서부터 아래 footer 끝까지는 정우님이 보내주신 본문 양식을 절대 훼손하지 않고 고스란히 복구했습니다. -->
-<div class="container">
-    <div class="info-bar">
-        <% if (user) { %>
-            <span>👋 <%= user.name %>님, 오늘도 즐거운 쇼핑 되세요!</span>
-        <% } else { %>
-            <style> .info-bar { justify-content: center; } </style>
-            <span style="color: #ef4444;">🛑 로그인 후 장바구니와 위시리스트를 사용할 수 있습니다.</span>
-        <% } %>
-    </div>
+<div class="mall-contents-body">
 
-    <div class="info-bar">
-        <span>현재 등록된 상품 수: <%= allProducts.length %>개</span>
-        <a href="/products/all">전체 목록 보기</a>
+    <div class="info-bar-stack">
+        <div class="info-bar">
+            <% if (user) { %>
+                <span>👋 <%= user.name %>님, 오늘도 상큼하고 즐거운 쇼핑 되세요!</span>
+            <% } else { %>
+                <span style="color: #ef4444; width: 100%; text-align: center;">🛑 로그인 후 시원한 장바구니와 위시리스트를 정상 이용할 수 있습니다.</span>
+            <% } %>
+        </div>
+
+        <div class="info-bar">
+            <span>현재 진열된 총 음료수: <span style="color: #0ea5e9; font-weight: 800;"><%= allProducts.length %>개</span></span>
+            <a href="/products/all">전체 상품 일괄조회 →</a>
+        </div>
     </div>
 
     <section>
-        <h2 style="font-size: 20px; color: #1e293b;">🍓 오늘의 과일 추천</h2>
-        <div class="product-grid">
-            <% if (featuredProducts && featuredProducts.length > 0) { %>
-                <% featuredProducts.forEach(product => { %>
-                    <div class="product-card">
-                        <img src="/images/<%= product.image || 'default.jpg' %>" alt="<%= product.name %>">
-                        <h3><%= product.emoji %> <%= product.name %></h3>
-                        <p><%= product.description %></p>
-                        <strong>₩<%= product.price.toLocaleString() %></strong>
+        <div class="section-headline-bar">
+            <h3>🔥 이 달의 인기 음료 추천</h3>
+        </div>
 
-                        <div class="action-forms">
-                            <form action="/cart/add" method="POST">
-                                <input type="hidden" name="productId" value="<%= product.id %>">
-                                <button type="submit" class="cart-button">🛒 장바구니 담기</button>
-                            </form>
-                            <form action="/wishlist/add" method="POST">
-                                <input type="hidden" name="productId" value="<%= product.id %>">
-                                <button type="submit" class="wish-button">💗 위시리스트 추가</button>
-                            </form>
+        <div class="shopping-item-grid">
+            <% if (typeof featuredProducts !== 'undefined' && featuredProducts.length > 0) { %>
+                <% featuredProducts.forEach(product => { %>
+                    <div class="shopping-card-box">
+                        <div class="card-img-wrapper">
+                            <img src="/images/<%= product.image || 'default.png' %>" alt="<%= product.name %>">
+                        </div>
+                        <div class="card-info-content">
+                            <h4><%= product.emoji || '🍹' %> <%= product.name %></h4>
+                            <p><%= product.description %></p>
+                            <div class="card-price-line">
+                                ₩<%= product.price.toLocaleString() %>
+                            </div>
+
+                            <div class="card-btn-group">
+                                <form action="/cart/add" method="POST" style="margin:0; flex-grow:1;">
+                                    <input type="hidden" name="productId" value="<%= product.id %>">
+                                    <button type="submit" class="btn-action-cart">🛒 장바구니</button>
+                                </form>
+                                <form action="/wishlist/add" method="POST" style="margin:0;">
+                                    <input type="hidden" name="productId" value="<%= product.id %>">
+                                    <button type="submit" class="btn-action-wish">❤️</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 <% }) %>
             <% } else { %>
-                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
-                    현재 상황실에서 진열된 '메인 추천' 상품이 없습니다. 📦
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px 0; color: #94a3b8; background: white; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 15px; font-weight: 500;">
+                    현재 진열된 인기 음료 추천 상품이 등록되지 않았습니다. 🧊
                 </div>
             <% } %>
         </div>
     </section>
 </div>
 
-<footer>
-    <p>&copy; 2026 내 쇼핑몰 시스템. All rights reserved.</p>
+<footer class="mall-footer-layer">
+    <p>&copy; 2026 Refresh Beverage Mall. All rights reserved.</p>
 </footer>
 
 </body>

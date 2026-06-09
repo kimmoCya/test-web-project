@@ -3,209 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>장바구니</title>
+    <title>장바구니 - Refresh Beverage Mall</title>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <style>
+        /* 💡 메인 홈 테마 기반 컬러 팔레트 */
+        :root {
+            --brand-navy: #0f172a;
+            --brand-cyan: #0ea5e9;
+            --brand-mint: #f0fdf4;
+            --brand-red: #f43f5e;
+            --bg-gray: #f8fafc;
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
             margin: 0; padding: 0;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: var(--bg-gray);
+            color: #1e293b;
         }
 
-        /* 💡 본문 레이아웃 정돈용 컨테이너 wrapper */
-        .cart-container {
-            max-width: 800px;
-            margin: 35px auto;
-            padding: 0 40px; /* index, products와 동일한 좌우 마진 유격 확보 */
+        /* 💡 [완벽 복원] image_c072cc.png 스크린샷과 100% 일치시킨 플랫 텍스트 탑 바 */
+        .top-utility-bar {
+            background-color: #0f172a; /* 묵직한 딥 네이비 */
+            color: #ffffff;
+            padding: 14px 60px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+        }
+        .user-welcome {
+            font-weight: 500;
+            color: #ffffff !important;
+        }
+        /* 아이디 부분을 청량한 시안 블루 텍스트로 강조 */
+        .user-welcome strong {
+            color: #38bdf8 !important;
+            font-weight: 700;
+        }
+        /* 일반 마이페이지 / 관리실 링크 메뉴 */
+        .top-link {
+            color: #ffffff !important;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        .top-link:hover {
+            opacity: 0.8;
+        }
+        /* 🚨 스크린샷 속 가장 중요한 빨간색 로그아웃 텍스트 링크 */
+        .top-link-logout {
+            color: #f43f5e !important; /* 쨍하고 화사한 붉은색 링크 텍스트 */
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .top-link-logout:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+        /* 관리실 배지 텍스트 링 */
+        .badge-admin {
+            color: #ef4444;
+            font-weight: bold;
+            margin-right: 2px;
         }
 
-        .cart-container h2 {
-            margin-bottom: 20px;
-            color: #1e1b4b;
-            font-size: 1.5em;
+        /* 💡 2단: GNB 내비게이션 헤더 바 */
+        .main-gnb-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0; z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .brand-logo {
+            font-size: 24px; font-weight: 800; color: var(--brand-navy); text-decoration: none;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .brand-logo span { color: var(--brand-cyan); }
+
+        .nav-menu-group { display: flex; gap: 45px; }
+        .nav-item {
+            color: #475569; text-decoration: none; font-size: 16px; font-weight: 700;
+            padding: 8px 0; position: relative;
+        }
+        .nav-item.active { color: var(--brand-cyan); }
+        .nav-item.active::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+            background-color: var(--brand-cyan); border-radius: 2px;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
+        /* 장바구니 본문 디자인 */
+        .cart-contents-body { max-width: 900px; margin: 50px auto; padding: 0 40px; }
+        .cart-title {
+            font-size: 24px; font-weight: 800; color: var(--brand-navy);
+            margin-bottom: 35px; display: flex; align-items: center; gap: 12px;
+            border-left: 5px solid var(--brand-cyan); padding-left: 15px;
         }
 
-        /* 개별 과일 담긴 박스 라인 */
-        li {
-            margin-bottom: 12px;
-            padding: 15px;
+        /* 장바구니 카드 아이템 스타일 */
+        .cart-item-card {
+            background: #ffffff;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            background: white;
+            border-radius: 16px;
+            padding: 20px 25px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);
+            transition: 0.2s;
+        }
+        .cart-item-card:hover { border-color: var(--brand-cyan); }
+
+        .item-main-info { display: flex; align-items: center; gap: 18px; }
+        .item-icon {
+            font-size: 28px; background-color: var(--brand-mint);
+            width: 50px; height: 50px; display: flex; align-items: center;
+            justify-content: center; border-radius: 12px;
+        }
+        .item-details h4 { font-size: 17px; margin: 0; color: var(--brand-navy); font-weight: 700; }
+        .item-details p { font-size: 14px; color: #64748b; margin: 4px 0 0 0; }
+
+        /* 가로 배치용 수량 박스 벨트 */
+        .quantity-box {
+            display: flex; align-items: center;
+            background: #f1f5f9; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0;
+        }
+        .qty-btn {
+            background: none; border: none; padding: 8px 14px; cursor: pointer;
+            font-size: 16px; font-weight: bold; color: var(--brand-navy); transition: 0.2s;
+        }
+        .qty-btn:hover { background: var(--brand-cyan); color: #ffffff; }
+        .qty-num {
+            width: 35px; text-align: center; font-weight: 800; color: var(--brand-navy); font-size: 15px;
+            border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; background: #fff;
         }
 
-        .item-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* 삭제 단추 */
+        .btn-delete {
+            background-color: #fff1f2; color: var(--brand-red); border: 1px solid #fda4af;
+            padding: 8px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s;
         }
+        .btn-delete:hover { background-color: var(--brand-red); color: #ffffff; }
 
-        /* 수량 변경 ➖ ➕ 폼 제어 영역 스타일 */
-        .quantity-control {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 15px;
+        /* 하단 결제 스택 */
+        .checkout-bar {
+            margin-top: 40px; padding: 30px; background: white; border-radius: 16px;
+            border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
-        .quantity-control button {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            padding: 2px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
+        .btn-checkout {
+            background-color: var(--brand-cyan); color: white; border: none; padding: 16px 50px;
+            border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 4px 14px rgba(14, 165, 233, 0.2);
         }
-        .quantity-control button:hover {
-            background: #e2e8f0;
-        }
-
-        /* 우측 삭제 버튼 스타일 */
-        .delete-button {
-            background-color: #e53e3e;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .delete-button:hover {
-            background-color: #c53030;
-        }
-
-        /* 하단 결제하기 메인 버튼 바 */
-        .btn-order {
-            display: inline-block;
-            padding: 12px 30px;
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
-        }
-        .btn-order:hover {
-            background-color: #1d4ed8;
-        }
+        .btn-checkout:hover { background-color: #0284c7; transform: translateY(-2px); }
 
         .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #2563eb;
-            font-weight: 500;
+            display: block; text-align: center; margin-top: 25px; color: #64748b;
+            text-decoration: none; font-size: 14px; font-weight: 600;
         }
-        .back-link:hover {
-            text-decoration: underline;
-        }
+        .back-link:hover { color: var(--brand-cyan); text-decoration: underline; }
+
+        footer { text-align: center; padding: 50px 0; color: #94a3b8; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<header style="display: flex; justify-content: flex-end; padding: 10px; align-items: center;">
-    <% if (!user) { %>
-        <a href="/login" style="color: #fff; background-color: #facc15; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold;">로그인</a>
-        <a href="/user/register" style="color: #fff; background-color: #facc15; padding: 6px 12px; border-radius: 5px; text-decoration: none; margin-left: 5px; font-size: 14px; font-weight: bold;">회원가입</a>
-    <% } else { %>
-        <span style="margin-right: 15px; font-weight: bold;"><%= user.username %>님 환영합니다!</span>
-
+<!-- 💡 [완벽 매칭 클론 완료] 1단 유틸리티 탑 바 구역 -->
+<div class="top-utility-bar">
+    <% if (user) { %>
+        <span class="user-welcome">안녕하세요, <strong><%= user.username %></strong>님!</span>
         <% if (user.role === 'ADMIN') { %>
-            <a href="/admin" style="
-                color: #fff !important;
-                background-color: #ef4444;
-                padding: 6px 12px;
-                border-radius: 5px;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 14px;
-                font-weight: bold;
-                margin-right: 5px;
-            ">👑 관리자 페이지</a>
+            <a href="/admin" class="top-link"><span class="badge-admin">ADMIN</span> 관리실</a>
         <% } %>
-
-        <a href="/mypage" style="
-            color: #fff !important;
-            background-color: #10b981;
-            padding: 6px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            font-weight: bold;
-            margin-right: 5px;
-        ">마이페이지</a>
-
-        <a href="/user/logout" style="color: #fff; background-color: #ef4444; padding: 6px 12px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: bold;">로그아웃</a>
+        <a href="/mypage" class="top-link">마이페이지</a>
+        <a href="/user/logout" class="top-link-logout">로그아웃</a>
+    <% } else { %>
+        <span class="user-welcome">방문객님 환영합니다!</span>
+        <a href="/user/login" class="top-link">로그인</a>
+        <a href="/user/register" class="top-link">회원가입</a>
     <% } %>
-</header>
+</div>
 
-<hr>
-
-<header>
-    <h1>🛍️ 장바구니</h1>
-    <nav>
-        <a href="/">홈</a>
-        <a href="/products">상품목록</a>
-        <a href="/cart">장바구니</a>
-        <a href="/board">고객센터</a>
+<!-- 2단: GNB 헤더 -->
+<header class="main-gnb-header">
+    <a href="/" class="brand-logo">🥤 Refresh <span>Beverage</span></a>
+    <nav class="nav-menu-group">
+        <a href="/" class="nav-item">홈</a>
+        <a href="/products" class="nav-item">상품목록</a>
+        <a href="/cart" class="nav-item active">장바구니</a>
+        <a href="/board" class="nav-item">고객센터</a>
     </nav>
 </header>
 
-<div class="cart-container">
-    <h2>🛒 <%= user.name %>님의 장바구니</h2>
+<div class="cart-contents-body">
+    <h2 class="cart-title">🛍️ <%= user.name %>님의 장바구니</h2>
 
     <% if (!cartItems || cartItems.length === 0) { %>
-        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 40px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.01);">
-            <p style="color: #64748b; font-size: 16px; margin: 0; font-weight: 500;">🛒 장바구니가 비어 있습니다.</p>
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 80px; text-align: center;">
+            <p style="color: #94a3b8; font-size: 18px; font-weight: 500; margin-bottom: 20px;">장바구니가 비어 있습니다. 🧊</p>
+            <a href="/products" class="btn-checkout" style="display:inline-block; text-decoration:none; font-size:14px; padding: 12px 30px;">상품 담으러 가기</a>
         </div>
-
     <% } else { %>
-        <ul>
+        <div class="cart-list">
             <% cartItems.forEach(item => { %>
-                <li>
-                    <div class="item-info">
-                        <span><%= item.emoji %></span>
-                        <strong><%= item.name %></strong>
-                        <span style="color: #64748b; margin-left: 5px;">- ₩<%= item.price.toLocaleString() %></span>
-
-                        <form action="/cart/update" method="POST" class="quantity-control">
-                            <input type="hidden" name="productId" value="<%= item.id %>">
-                            <button type="submit" name="action" value="decrease">➖</button>
-                            <span style="font-weight: bold; min-width: 20px; text-align: center;"><%= item.quantity %></span>
-                            <button type="submit" name="action" value="increase">➕</button>
-                        </form>
+                <div class="cart-item-card">
+                    <div class="item-main-info">
+                        <div class="item-icon"><%= item.emoji %></div>
+                        <div class="item-details">
+                            <h4><%= item.name %></h4>
+                            <p>₩<%= item.price.toLocaleString() %></p>
+                        </div>
                     </div>
 
-                    <form action="/cart/delete" method="POST" style="margin: 0;">
-                        <input type="hidden" name="productId" value="<%= item.id %>">
-                        <button type="submit" class="delete-button">🗑 삭제</button>
-                    </form>
-                </li>
-            <% }) %>
-        </ul>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <form action="/cart/update" method="POST" class="quantity-box">
+                            <input type="hidden" name="productId" value="<%= item.id %>">
+                            <button type="submit" name="action" value="decrease" class="qty-btn">－</button>
+                            <div class="qty-num"><%= item.quantity %></div>
+                            <button type="submit" name="action" value="increase" class="qty-btn">＋</button>
+                        </form>
 
-        <form action="/order/confirm" method="POST" style="margin-top: 25px;" onsubmit="return confirm('💳 장바구니에 담긴 물품을 모두 결제하고 주문을 확정하시겠습니까?')">
-            <button type="submit" class="btn-order">✅ 주문 및 안전 결제하기</button>
-        </form>
+                        <form action="/cart/delete" method="POST" style="margin: 0;">
+                            <input type="hidden" name="productId" value="<%= item.id %>">
+                            <button type="submit" class="btn-delete">🗑 삭제</button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <div class="checkout-bar">
+            <form action="/order/confirm" method="POST" onsubmit="return confirm('💳 결제를 진행하고 주문을 완료하시겠습니까?')">
+                <button type="submit" class="btn-checkout">✅ 주문 및 안전 결제하기</button>
+            </form>
+        </div>
     <% } %>
 
-    <p><a href="/products" class="back-link">← 과일 진열대로 돌아가기</a></p>
+    <a href="/products" class="back-link">← 음료 진열대로 돌아가기</a>
 </div>
 
 <footer>
-    <p style="text-align: center; margin-top: 60px; color: #94a3b8;">&copy; 2026 쇼핑몰 예시. All rights reserved.</p>
+    <p>&copy; 2026 Refresh Beverage Mall. All rights reserved.</p>
 </footer>
 
 </body>

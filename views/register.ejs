@@ -4,90 +4,288 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>회원가입 - Refresh Beverage Mall</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
     <style>
+        /* 💡 현대적인 이커머스 전용 기본 베이스 스타일링 */
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, sans-serif;
+            margin: 0; padding: 0;
+            background-color: #f8fafc;
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 1단: 쇼핑몰 최상단 유저 유틸리티 바 (완벽 싱크 대칭) */
+        .top-utility-bar {
+            background-color: #0f172a;
+            color: #cbd5e1;
+            padding: 10px 60px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+        }
+        .user-welcome {
+            font-weight: 500;
+            color: #94a3b8;
+        }
+        .top-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .top-link:hover {
+            color: #ffffff;
+        }
+
+        /* 2단: 쇼핑몰 고정 상단 GNB 바 */
+        .main-gnb-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+        .brand-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.5px;
+        }
+        .brand-logo span {
+            color: #0ea5e9;
+        }
+        .nav-menu-group {
+            display: flex;
+            gap: 45px;
+        }
+        .nav-item {
+            color: #475569;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+        .nav-item:hover {
+            color: #0ea5e9;
+        }
+
+        /* 본문 레이아웃 정렬 구역 */
+        .register-contents-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+        }
+
+        /* 정돈된 가입 정보 입력 카드 박스 */
+        .register-card-box {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
             padding: 40px;
-            background-color: #f4f4f4;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
         }
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
+
+        .register-card-box h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+            text-align: center;
         }
-        form {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            max-width: 450px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        label {
-            display: block;
-            margin-top: 12px;
-            font-weight: bold;
-            color: #555;
+
+        .register-sub-text {
             font-size: 14px;
+            color: #64748b;
+            margin-bottom: 30px;
+            text-align: center;
         }
+
+        /* 개별 폼 컨트롤 세팅 */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        /* 필수 항목 별표 마크 추가 */
+        .form-group label.required::after {
+            content: " *";
+            color: #ef4444;
+        }
+
         input[type="text"], input[type="password"], input[type="tel"], input[type="email"] {
             width: 100%;
-            padding: 10px;
-            margin: 6px 0 12px 0;
+            padding: 12px 14px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #fff;
+            color: #0f172a;
+            transition: all 0.2s;
         }
-        .gender-group {
-            margin: 10px 0 20px 0;
+
+        input[type="text"]:focus, input[type="password"]:focus, input[type="tel"]:focus, input[type="email"]:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
         }
-        .gender-group input {
-            width: auto;
-            margin-right: 5px;
-        }
-        button {
+
+        /* 하단 메인 가입하기 제출 버튼 */
+        .btn-register-submit {
             width: 100%;
-            background-color: #4CAF50;
+            background-color: #0f172a;
             color: white;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
+            margin-top: 25px;
+            transition: background-color 0.2s, transform 0.1s;
         }
-        button:hover {
-            background-color: #45a049;
+
+        .btn-register-submit:hover {
+            background-color: #1e293b;
+        }
+
+        .btn-register-submit:active {
+            transform: scale(0.99);
+        }
+
+        .link-back-home {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .link-back-home:hover {
+            color: #0f172a;
+            text-decoration: underline;
+        }
+
+        /* 하단 푸터 */
+        .mall-footer-layer {
+            background-color: #0f172a;
+            color: #94a3b8;
+            padding: 40px 60px;
+            text-align: center;
+            font-size: 14px;
+            border-top: 1px solid #1e293b;
         }
     </style>
 </head>
 <body>
-<a href="/" style="display:inline-block; margin-bottom:15px; color:#2563eb; text-decoration:underline;">🏠 메인으로 돌아가기</a>
 
-<h2>회원가입</h2>
-<form action="/user/register" method="post">
-    <label for="username">아이디</label>
-    <input type="text" id="username" name="username" placeholder="예: hong2018" required>
+<!-- 1단: 쇼핑몰 최상단 유틸리티 바 -->
+<div class="top-utility-bar">
+    <span class="user-welcome">방문객님 환영합니다!</span>
+    <a href="/user/login" class="top-link">로그인</a>
+    <a href="/user/register" class="top-link font-bold" style="color: #0ea5e9;">회원가입</a>
+</div>
 
-    <label for="name">이름</label>
-    <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+<!-- 2단: 쇼핑몰 고정 상단 GNB 바 (대칭 고정 일치 완료) -->
+<header class="main-gnb-header">
+    <a href="/" class="brand-logo">🥤 Refresh <span>Beverage</span></a>
+    <nav class="nav-menu-group">
+        <a href="/" class="nav-item">홈</a>
+        <a href="/products" class="nav-item">상품목록</a>
+        <a href="/cart" class="nav-item">장바구니</a>
+        <a href="/board" class="nav-item">고객센터</a>
+    </nav>
+</header>
 
-    <label for="password">비밀번호</label>
-    <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
+<!-- 회원가입 본문 프레임 구역 -->
+<div class="register-contents-body">
 
-    <label for="birth">생년월일</label>
-    <input type="text" id="birth" name="birth" placeholder="예: 19910327">
+    <div class="register-card-box">
+        <h2>회원가입</h2>
+        <p class="register-sub-text">회원정보를 입력해 주시면 청량한 혜택이 시작됩니다.</p>
 
-    <label for="email">이메일</label>
-    <input type="email" id="email" name="email" placeholder="예: user@example.com" required>
+        <!-- 백엔드 Express routes/user.js 회원등록 라우터 연동 -->
+        <form action="/user/register" method="post">
 
-    <label for="phone">연락처</label>
-    <input type="tel" id="phone" name="phone" placeholder="휴대폰 '-' 없이 숫자만 입력하세요">
+            <div class="form-group">
+                <label for="username" class="required">아이디</label>
+                <input type="text" id="username" name="username" placeholder="사용할 아이디를 입력하세요" required>
+            </div>
 
-    <label for="address">주소</label>
-    <input type="text" id="address" name="address" placeholder="주소를 입력해주세요">
+            <div class="form-group">
+                <label for="name" class="required">이름</label>
+                <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+            </div>
 
-    <button type="submit">가입하기</button>
-</form>
+            <div class="form-group">
+                <label for="password" class="required">비밀번호</label>
+                <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
+            </div>
+
+            <div class="form-group">
+                <label for="birth">생년월일</label>
+                <input type="text" id="birth" name="birth" placeholder="예: 19990327">
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="required">이메일</label>
+                <input type="email" id="email" name="email" placeholder="예: hong2026@naver.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">연락처</label>
+                <input type="tel" id="phone" name="phone" placeholder="휴대폰 '-' 없이 숫자만 입력하세요">
+            </div>
+
+            <div class="form-group">
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address" placeholder="주소를 입력해주세요">
+            </div>
+
+            <button type="submit" class="btn-register-submit">가입하기</button>
+        </form>
+
+        <a href="/" class="link-back-home">🏠 메인으로 돌아가기</a>
+    </div>
+
+</div>
+
+<!-- 하단 꼬리말 구역 -->
+<footer class="mall-footer-layer">
+    <p>&copy; 2026 Refresh Beverage Mall. All rights reserved.</p>
+</footer>
 
 </body>
 </html>

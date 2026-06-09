@@ -151,7 +151,7 @@ router.post('/checkout', (req, res) => {
 
                     db.run('DELETE FROM cart_items WHERE user_id = ?', [user.id], (err3) => {
                         if (err3) console.error('장바구니 비우기 오류:', err3.message);
-                        res.send('<script>alert("💚 과일 주문 및 결제가 완료되었습니다!"); location.href="/mypage";</script>');
+                        res.send('<script>alert("💚 음료수 주문 및 결제가 완료되었습니다!"); location.href="/mypage";</script>');
                     });
                 });
             });

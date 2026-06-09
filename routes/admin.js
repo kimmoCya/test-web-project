@@ -3,6 +3,7 @@ const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
+// DB 경로 설정 (app.js와 동일한 절대 경로 사용)
 const dbPath = path.resolve(__dirname, '../db/database.sqlite');
 const db = new sqlite3.Database(dbPath);
 
@@ -49,7 +50,6 @@ router.post('/users/delete', (req, res) => {
     });
 });
 
-
 // 📦 2. 상품 관리 목록 조회
 router.get('/products', (req, res) => {
     db.all('SELECT * FROM products ORDER BY id DESC', (err, rows) => {
@@ -58,18 +58,19 @@ router.get('/products', (req, res) => {
     });
 });
 
-// 🍓 신규 과일 추가 폼 페이지 이동
+// 신규 상품 추가 폼 페이지 이동
 router.get('/products/new', (req, res) => {
     res.render('admin/products_new', { user: req.session.user });
 });
 
-// 💾 신규 과일 등록 처리
+// 🍓 신규 상품 등록 (💡 이모지 입력 삭제 및 자동화 패치)
 router.post('/products/add', (req, res) => {
-    const { name, price, emoji, description, image, status } = req.body;
+    const { name, price, description, image, status } = req.body;
+    const emoji = '🥤'; // 음료수 기본 아이콘 자동 고정
     const query = `INSERT INTO products (name, price, emoji, description, image, status) VALUES (?, ?, ?, ?, ?, ?)`;
     db.run(query, [name, price, emoji, description, image || 'default.png', status || '일반'], (err) => {
-        if (err) return res.status(500).send('商品 추가 에러');
-        res.send('<script>alert("신규 과일 상품이 무사히 진열되었습니다."); location.href="/admin/products";</script>');
+        if (err) return res.status(500).send('상품 추가 에러');
+        res.send('<script>alert("신규 상품이 등록되었습니다."); location.href="/admin/products";</script>');
     });
 });
 
@@ -82,18 +83,19 @@ router.get('/products/edit/:id', (req, res) => {
     });
 });
 
-// 💾 상품 수정 처리 실행
+// 💾 상품 수정 처리 실행 (💡 이모지 자동화 패치)
 router.post('/products/edit/:id', (req, res) => {
     const productId = req.params.id;
-    const { name, price, emoji, description, image, status } = req.body;
+    const { name, price, description, image, status } = req.body;
+    const emoji = '🥤';
     const query = `UPDATE products SET name = ?, price = ?, emoji = ?, description = ?, image = ?, status = ? WHERE id = ?`;
     db.run(query, [name, price, emoji, description, image || 'default.png', status, productId], (err) => {
         if (err) return res.status(500).send('상품 수정 에러');
-        res.send('<script>alert("과일 상품 정보가 성공적으로 수정되었습니다."); location.href="/admin/products";</script>');
+        res.send('<script>alert("상품 정보가 수정되었습니다."); location.href="/admin/products";</script>');
     });
 });
 
-// 🌟 대장에서 실시간 데이터 상태 변경 수신 API
+// 🌟 대장 실시간 상태 변경 API
 router.post('/products/update-status', (req, res) => {
     const { id, status } = req.body;
     db.run('UPDATE products SET status = ? WHERE id = ?', [status, id], function(err) {
@@ -102,7 +104,7 @@ router.post('/products/update-status', (req, res) => {
     });
 });
 
-// ❌ 상품 즉시 삭제 처리
+// ❌ 상품 즉시 삭제
 router.post('/products/delete', (req, res) => {
     const { productId } = req.body;
     db.run('DELETE FROM products WHERE id = ?', [productId], (err) => {
@@ -111,11 +113,7 @@ router.post('/products/delete', (req, res) => {
     });
 });
 
-
-// ==========================================
-// 📜 3. 전체 고객 주문 내역 현황 관리
-// 💡 [개인 취향 저격 패치] 배송완료 건은 상황실 목록에서 제외 (숨김)
-// ==========================================
+// 📜 3. 주문 관리 (배송완료 제외 필터링)
 router.get('/orders', (req, res) => {
     const query = `
         SELECT o.id AS order_id, o.total_price, o.status, o.created_at, u.name AS user_name, u.username
@@ -125,36 +123,29 @@ router.get('/orders', (req, res) => {
         ORDER BY o.id DESC`;
 
     db.all(query, (err, rows) => {
-        if (err) return res.status(500).send('전체 주문 조회 에러');
+        if (err) return res.status(500).send('주문 조회 에러');
         res.render('admin/orders', { orders: rows, user: req.session.user });
     });
 });
 
-// 💡 [핵심 추가] 하단 일괄 수정 버튼을 누르면 배열 형태로 수신하여 한 번에 처리하는 API
+// 💡 [핵심] 일괄 주문 상태 수정 처리
 router.post('/orders/update-batch', (req, res) => {
     let { orderIds, newStatuses } = req.body;
 
     if (!orderIds || !newStatuses) {
-        return res.send('<script>alert("변경할 내역이 존재하지 않습니다."); location.href="/admin/orders";</script>');
+        return res.send('<script>alert("수정할 내역이 없습니다."); location.href="/admin/orders";</script>');
     }
 
-    // 데이터가 단 한 건일 경우 Express가 배열이 아닌 단일 문자열로 취급하므로 배열로 예외 방어선 구축
-    if (!Array.isArray(orderIds)) orderIds = [orderIds];
-    if (!Array.isArray(newStatuses)) newStatuses = [newStatuses];
+    if (!Array.isArray(orderIds)) { orderIds = [orderIds]; newStatuses = [newStatuses]; }
 
     db.serialize(() => {
         const stmt = db.prepare('UPDATE orders SET status = ? WHERE id = ?');
-
         for (let i = 0; i < orderIds.length; i++) {
             stmt.run(newStatuses[i], orderIds[i]);
         }
-
         stmt.finalize((err) => {
-            if (err) {
-                console.error('일괄 업데이트 오류:', err);
-                return res.status(500).send('배송 상태 일괄 변경 실패');
-            }
-            res.send('<script>alert("🔒 선택하신 모든 배송 상태가 일괄 수정되었으며, 배송완료 건은 목록에서 지워졌습니다."); location.href="/admin/orders";</script>');
+            if (err) return res.status(500).send('일괄 수정 실패');
+            res.send('<script>alert("배송 상태가 일괄 적용되었습니다."); location.href="/admin/orders";</script>');
         });
     });
 });

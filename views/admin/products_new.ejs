@@ -2,42 +2,83 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>신상 과일 등록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신규 음료 출시 등록 - Refresh Beverage Mall</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif; -webkit-font-smoothing: antialiased; padding: 40px; background-color: #f8fafc; }
-        .form-card { max-width: 480px; margin: 0 auto; background: white; padding: 35px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        h2 { font-size: 18px; margin-top:0; margin-bottom:25px; border-left: 5px solid #2563eb; padding-left: 10px; color: #1e293b; }
-        label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 6px; }
-        input, textarea, select { width: 100%; padding: 10px; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; margin-bottom: 16px; color: #334155; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        .btn-submit { background-color: #2563eb; color: white; border: none; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; }
-        .btn-submit:hover { background-color: #1d4ed8; }
-        .btn-back { display: block; text-align: center; margin-top: 15px; color: #64748b; text-decoration: none; font-size: 13px; }
-        .btn-back:hover { text-decoration: underline; color: #1e293b; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif; margin: 0; padding: 0; background-color: #f8fafc; color: #1e293b; }
+
+        /* 💡 1단/2단 헤더 (정우님 코드 그대로 유지) */
+        .top-utility-bar { background-color: #0f172a; color: #cbd5e1; padding: 10px 60px; display: flex; justify-content: flex-end; align-items: center; gap: 20px; font-size: 13px; }
+        .main-gnb-header { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .brand-logo { font-size: 24px; font-weight: 800; color: #0f172a; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .brand-logo span { color: #0ea5e9; }
+        .nav-menu-group { display: flex; gap: 45px; }
+        .nav-item { color: #475569; text-decoration: none; font-size: 16px; font-weight: 700; }
+
+        /* 본문 중앙 정렬 카드 레이아웃 */
+        .admin-contents-body { padding: 50px 20px; display: flex; justify-content: center; }
+        .form-card { max-width: 500px; width: 100%; background: white; padding: 40px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+
+        /* 타이틀 포인트 스타일 */
+        h2 { font-size: 20px; margin: 0 0 30px 0; border-left: 5px solid #0ea5e9; padding-left: 12px; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+
+        label { font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 8px; }
+        input, textarea, select { width: 100%; padding: 12px; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; margin-bottom: 20px; color: #1e293b; transition: all 0.2s; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1); }
+
+        /* 버튼 디자인 */
+        .btn-submit { background-color: #0ea5e9; color: white; border: none; padding: 14px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .btn-submit:hover { background-color: #0284c7; }
+        .btn-back { display: block; text-align: center; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 13px; font-weight: 500; }
+        .btn-back:hover { text-decoration: underline; color: #0f172a; }
     </style>
 </head>
 <body>
-<div class="form-card">
-    <h2>🍓 신상 과일 론칭 등록</h2>
-    <form action="/admin/products/add" method="post">
-        <label>과일 이름</label>
-        <input type="text" name="name" placeholder="예: 메론" required>
-        <label>가격 (원)</label>
-        <input type="number" name="price" placeholder="숫자만 입력" required>
-        <label>대표 이모지 (아이콘)</label>
-        <input type="text" name="emoji" value="🍈" required>
-        <label>상세 설명</label>
-        <textarea name="description" rows="3" placeholder="상세 정보를 기입하세요"></textarea>
-        <label>이미지 파일명</label>
-        <input type="text" name="image" value="default.png">
-        <label>속성 고유상태</label>
-        <select name="status">
-            <option value="일반" selected>일반 진열 상품</option>
-            <option value="메인 추천 노출중">🌟 메인 추천 노출중</option>
-        </select>
-        <button type="submit" class="btn-submit">✨ 과일 신규 출시하기</button>
-        <a href="/admin/products" class="btn-back">취소하고 대장으로 가기</a>
-    </form>
+
+<div class="top-utility-bar">
+    <span style="color:#94a3b8">관리자 계정으로 접속중</span>
+    <a href="/user/logout" style="color:#cbd5e1; text-decoration:none;">로그아웃</a>
 </div>
+
+<header class="main-gnb-header">
+    <a href="/" class="brand-logo">🥤 Refresh <span>Beverage</span></a>
+    <nav class="nav-menu-group">
+        <a href="/" class="nav-item">홈</a>
+        <a href="/products" class="nav-item">상품목록</a>
+        <a href="/cart" class="nav-item">장바구니</a>
+        <a href="/board" class="nav-item">고객센터</a>
+    </nav>
+</header>
+
+<div class="admin-contents-body">
+    <div class="form-card">
+        <h2>🍹 신상 음료 론칭 등록</h2>
+        <form action="/admin/products/add" method="post">
+            <label>음료 이름</label>
+            <input type="text" name="name" placeholder="예: 생딸기 크림 에이드" required>
+
+            <label>가격 (원)</label>
+            <input type="number" name="price" placeholder="숫자만 입력하세요" required>
+
+            <!-- 💡 이모지 입력창이 있던 구역을 삭제하여 폼을 더 깔끔하게 구성 -->
+
+            <label>상세 설명</label>
+            <textarea name="description" rows="3" placeholder="음료의 특징과 맛을 상세히 기입하세요"></textarea>
+
+            <label>이미지 파일명</label>
+            <input type="text" name="image" value="default.png">
+
+            <label>속성 고유상태</label>
+            <select name="status">
+                <option value="일반" selected>일반 진열 상품</option>
+                <option value="메인 추천 노출중">🌟 메인 추천 노출중</option>
+            </select>
+
+            <button type="submit" class="btn-submit">✨ 음료 신규 출시하기</button>
+            <a href="/admin/products" class="btn-back">← 관리자 대장으로 가기</a>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>
