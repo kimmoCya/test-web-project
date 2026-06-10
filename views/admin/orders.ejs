@@ -2,91 +2,83 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>주문 컨트롤타워</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배송 상태 관리 - Refresh Beverage Mall</title>
     <style>
-        body { font-family: sans-serif; margin: 30px; background-color: #f8fafc; }
-        h2 { color: #1e293b; margin-bottom: 5px; }
-        p { margin-top: 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-radius: 8px; overflow: hidden; margin-bottom: 25px; }
-        th, td { border: 1px solid #e2e8f0; padding: 14px; text-align: center; }
-        th { background-color: #f1f5f9; color: #475569; font-weight: bold; }
-        tr:hover { background-color: #f8fafc; }
-        select { padding: 6px 10px; border-radius: 4px; border: 1px solid #cbd5e1; font-family: inherit; cursor: pointer; background-color: #fff; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif; -webkit-font-smoothing: antialiased; margin: 0; padding: 40px; background-color: #f8fafc; color: #1e293b; }
+        .admin-container { max-width: 1100px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; border-bottom: 2px solid #0f172a; padding-bottom: 20px; }
+        h2 { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0; }
+        .btn-home { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .btn-home:hover { color: #0f172a; text-decoration: underline; }
 
-        /* 💡 하단 일괄 수정용 녹색 버튼 스타일 추가 */
-        .btn-batch-submit {
-            display: block;
-            width: 250px;
-            margin: 20px auto;
-            padding: 12px 20px;
-            background-color: #10b981;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
-            transition: background 0.2s;
-        }
-        .btn-batch-submit:hover {
-            background-color: #059669;
-        }
+        .management-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 20px; }
+        .management-table th { background-color: #f1f5f9; color: #475569; font-weight: 700; padding: 16px 12px; border-bottom: 2px solid #e2e8f0; text-align: center; }
+        .management-table td { padding: 16px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; color: #334155; }
+        .management-table tr:hover { background-color: #f8fafc; }
+        .prod-id { font-family: monospace; color: #94a3b8; font-weight: 600; }
+
+        .status-select { padding: 8px 12px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 6px; background-color: #fff; color: #334155; cursor: pointer; transition: 0.2s; }
+        .status-select:focus { outline: none; border-color: #0ea5e9; }
+
+        .btn-batch-save { background-color: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; width: 100%; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); transition: 0.2s; }
+        .btn-batch-save:hover { background-color: #059669; }
+
+        footer { margin-top: 50px; text-align: center; font-size: 13px; color: #94a3b8; }
     </style>
 </head>
 <body>
-<h2>📜 전 회원 배송 상태 제어 상황실</h2>
-<p><a href="/admin" style="color: #2563eb; text-decoration: none; font-weight: bold;">← 대시보드로 복귀</a></p>
+<div class="admin-container">
+    <header class="board-header">
+        <h2>🚚 고객 주문 및 배송 상태 일괄 처리장</h2>
+        <a href="/admin" class="btn-home">⬅ 대시보드로 복귀</a>
+    </header>
 
-<!-- 💡 테이블 전체를 하나의 대형 일괄 수정 폼태그로 묶습니다. -->
-<form action="/admin/orders/update-batch" method="POST" onsubmit="return confirm('선택하신 모든 주문 건의 배송 단계를 한 번에 수정하시겠습니까?\n배송완료로 선택된 건은 상황실 대장에서 자동 정리됩니다.')">
-    <table>
-        <thead>
-        <tr>
-            <th>주문번호</th>
-            <th>주문 고객 (계정 ID)</th>
-            <th>총 결제액</th>
-            <th>주문 일시</th>
-            <th>현재 배송 단계</th>
-            <th>상태 변경 명령</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% if (orders && orders.length > 0) { %>
-            <% orders.forEach(o => { %>
+    <main>
+        <!-- 💡 일괄 수정을 위해 전체 테이블을 form으로 감쌉니다 -->
+        <form action="/admin/orders/update-batch" method="POST">
+            <table class="management-table">
+                <thead>
                 <tr>
-                    <td>
-                        #<%= o.order_id %>
-                        <!-- 💡 백엔드 배열 수신을 위한 hidden 식별자 바인딩 -->
-                        <input type="hidden" name="orderIds" value="<%= o.order_id %>">
-                    </td>
-                    <td><strong><%= o.user_name %></strong> (<%= o.username %>)</td>
-                    <td style="font-weight: bold; color: #10b981;">₩<%= o.total_price.toLocaleString() %></td>
-                    <td><%= o.created_at %></td>
-                    <td style="font-weight: bold; color: #2563eb;"><%= o.status %></td>
-                    <td>
-                        <!-- 💡 자동 제출(onchange)을 걷어내고 순수 상태값만 담아 보낼 수 있도록 세팅 -->
-                        <select name="newStatuses">
-                            <option value="배송준비중" <%= o.status === '배송준비중' ? 'selected' : '' %>>배송준비중</option>
-                            <option value="배송중" <%= o.status === '배송중' ? 'selected' : '' %>>배송중</option>
-                            <option value="배송완료" <%= o.status === '배송완료' ? 'selected' : '' %>>배송완료 (목록에서 삭제)</option>
-                        </select>
-                    </td>
+                    <th style="width: 15%;">주문번호</th>
+                    <th style="width: 25%;">고객 정보</th>
+                    <th style="width: 15%;">총 결제액</th>
+                    <th style="width: 20%;">주문 접수일</th>
+                    <th style="width: 25%;">배송 상태 (변경)</th>
                 </tr>
-            <% }) %>
-        <% } else { %>
-            <tr>
-                <td colspan="6" style="color: #94a3b8; padding: 40px; font-weight: 500;">현재 처리해야 할 미완결 고객 주문 내역이 한 건도 없습니다. 🎉</td>
-            </tr>
-        <% } %>
-        </tbody>
-    </table>
+                </thead>
+                <tbody>
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <tr>
+                            <td class="prod-id">
+                                #<%= order.order_id %>
+                                <input type="hidden" name="orderIds" value="<%= order.order_id %>">
+                            </td>
+                            <td style="font-weight: 700;"><%= order.user_name %> <span style="font-size:12px; color:#64748b;">(<%= order.username %>)</span></td>
+                            <td style="font-weight: 600; color: #0ea5e9;">₩<%= order.total_price.toLocaleString() %></td>
+                            <td style="font-size: 13px; color: #64748b;"><%= order.created_at.substring(0, 16) %></td>
+                            <td>
+                                <select class="status-select" name="newStatuses">
+                                    <option value="배송준비중" <%= order.status === '배송준비중' ? 'selected' : '' %>>📦 배송준비중</option>
+                                    <option value="배송중" <%= order.status === '배송중' ? 'selected' : '' %>>🚚 배송중</option>
+                                    <option value="배송완료" <%= order.status === '배송완료' ? 'selected' : '' %>>✅ 배송완료 (완료시 목록 제외)</option>
+                                </select>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr><td colspan="5" style="padding: 50px; color: #94a3b8;">현재 처리해야 할 활성 주문이 없습니다.</td></tr>
+                <% } %>
+                </tbody>
+            </table>
 
-    <!-- 💡 목록에 잔여 주문이 있을 때만 하단 일괄 처리 버튼 활성화 -->
-    <% if (orders && orders.length > 0) { %>
-        <button type="submit" class="btn-batch-submit">⚙️ 위의 설정 상태로 싹 다 수정하기</button>
-    <% } %>
-</form>
-
+            <% if (orders && orders.length > 0) { %>
+                <button type="submit" class="btn-batch-save">현재 배송 상태 일괄 저장하기</button>
+            <% } %>
+        </form>
+    </main>
+    <footer>&copy; 2026 시스템 관리 센터. All rights reserved.</footer>
+</div>
 </body>
 </html>

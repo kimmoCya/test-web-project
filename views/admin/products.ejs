@@ -3,42 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>과일 진열 상품 관리대장</title>
+    <title>진열 상품 관리대장 - Refresh Beverage Mall</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
             -webkit-font-smoothing: antialiased;
-            margin: 0; padding: 40px; background-color: #f8fafc; color: #334155;
+            margin: 0; padding: 40px;
+            background-color: #f8fafc;
+            color: #1e293b;
         }
-        .admin-container { max-width: 1050px; margin: 0 auto; background: white; padding: 35px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #1e293b; padding-bottom: 15px; }
-        h2 { font-size: 22px; font-weight: 700; color: #1e293b; margin: 0; }
-        .btn-group-right { display: flex; gap: 10px; align-items: center; }
-        .btn-home { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500; }
-        .btn-home:hover { text-decoration: underline; color: #1e293b; }
-        .btn-add-product { background-color: #2563eb; color: white !important; padding: 9px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.15); }
-        .btn-add-product:hover { background-color: #1d4ed8; }
+
+        .admin-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .btn-group-right { display: flex; gap: 14px; align-items: center; }
+
+        .btn-home {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-home:hover { color: #0f172a; text-decoration: underline; }
+
+        .btn-add-product {
+            background-color: #0ea5e9;
+            color: white !important;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+            transition: all 0.2s;
+        }
+        .btn-add-product:hover {
+            background-color: #0284c7;
+            transform: translateY(-1px);
+        }
+
         .management-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        .management-table th { background-color: #f1f5f9; color: #475569; font-weight: 600; padding: 14px 12px; border-bottom: 2px solid #e2e8f0; text-align: center; }
-        .management-table td { padding: 14px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; color: #334155; }
-        .management-table tr:hover { background-color: #fafafa; }
-        .status-select { margin-bottom: 0; padding: 6px 10px; width: auto; font-weight: 500; border: 1px solid #cbd5e1; border-radius: 4px; background-color: #fff; }
+
+        .management-table th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 700;
+            padding: 16px 12px;
+            border-bottom: 2px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .management-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+            vertical-align: middle;
+            color: #334155;
+        }
+        .management-table tr:hover { background-color: #f8fafc; }
+
+        .prod-id {
+            font-family: monospace;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .status-select {
+            padding: 8px 12px;
+            font-weight: 600;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #fff;
+            color: #334155;
+            cursor: pointer;
+        }
         .status-select.featured { background-color: #fffdf5; border-color: #fef08a; color: #854d0e; }
-        .action-links a, .action-links button { font-size: 12px; text-decoration: none; padding: 4px 10px; border: 1px solid #e2e8f0; border-radius: 4px; background: #fff; display: inline-block; cursor: pointer; font-weight: 500; }
-        .action-links a.edit-btn { color: #2563eb; }
-        .action-links a.edit-btn:hover { border-color: #bfdbfe; background-color: #eff6ff; }
-        .action-links button.delete-btn { color: #ef4444; }
-        .action-links button.delete-btn:hover { border-color: #fecaca; background-color: #fef2f2; }
-        footer { margin-top: 40px; text-align: center; font-size: 12px; color: #94a3b8; }
+
+        .action-links a, .action-links button {
+            font-size: 12px;
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: #fff;
+            display: inline-block;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .action-links a.edit-btn { color: #0ea5e9; border-color: #bae6fd; }
+        .action-links a.edit-btn:hover { background-color: #e0f2fe; }
+
+        .action-links button.delete-btn { color: #f43f5e; border-color: #fecaca; }
+        .action-links button.delete-btn:hover { background-color: #fff1f2; color: #e11d48; }
+
+        footer { margin-top: 50px; text-align: center; font-size: 13px; color: #94a3b8; }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
     <header class="board-header">
-        <h2>📋 현재 몰 진열 상품 관리대장</h2>
+        <h2>현재 몰 진열 상품 관리대장</h2>
         <div class="btn-group-right">
-            <a href="/admin" class="btn-home">🏠 대시보드로 복귀</a>
+            <a href="/admin" class="btn-home">대시보드로 복귀</a>
             <a href="/admin/products/new" class="btn-add-product">신규 상품 추가</a>
         </div>
     </header>
@@ -47,22 +141,21 @@
         <table class="management-table">
             <thead>
             <tr>
-                <th style="width: 10%;">상품번호</th>
-                <th style="width: 12%;">아이콘</th>
-                <th style="width: 25%;">상품 이름</th>
+                <th style="width: 12%;">상품번호</th>
+                <!-- 💡 '商品' 한자를 '상품' 한글로 변경 완료 -->
+                <th style="width: 38%;">상품 이름</th>
                 <th style="width: 18%;">판매가</th>
                 <th style="width: 20%;">속성 고유상태</th>
-                <th style="width: 15%;">진열 처분</th>
+                <th style="width: 12%;">진열 처분</th>
             </tr>
             </thead>
             <tbody>
             <% if (typeof products !== 'undefined' && products && products.length > 0) { %>
                 <% products.forEach(product => { %>
                     <tr id="row-<%= product.id %>">
-                        <td><%= product.id %></td>
-                        <td style="font-size: 24px; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;"><%= product.emoji %></td>
-                        <td style="font-weight: bold;"><%= product.name %></td>
-                        <td>₩<%= product.price.toLocaleString() %></td>
+                        <td class="prod-id">#<%= product.id %></td>
+                        <td style="font-weight: 700; color: #0f172a;"><%= product.name %></td>
+                        <td style="font-weight: 600;">₩<%= product.price.toLocaleString() %></td>
                         <td>
                             <select class="status-select <%= product.status === '메인 추천 노출중' ? 'featured' : '' %>" onchange="updateStatus('<%= product.id %>', this)">
                                 <option value="일반" <%= product.status === '일반' ? 'selected' : '' %>>일반</option>
@@ -76,7 +169,7 @@
                     </tr>
                 <% }) %>
             <% } else { %>
-                <tr><td colspan="6" style="padding: 40px; color: #94a3b8; text-align: center;">진열된 과일 상품이 존재하지 않습니다.</td></tr>
+                <tr><td colspan="5" style="padding: 50px; color: #94a3b8; text-align: center; font-weight: 500;">진열된 음료 상품이 존재하지 않습니다.</td></tr>
             <% } %>
             </tbody>
         </table>
@@ -101,7 +194,7 @@
     }
 
     function deleteProduct(productId) {
-        if (confirm('이 과일 상품을 대장에서 즉시 삭제하시겠습니까?')) {
+        if (confirm('이 음료 상품을 대장에서 즉시 삭제하시겠습니까?')) {
             fetch('/admin/products/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

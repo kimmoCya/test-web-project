@@ -1,14 +1,14 @@
 -- 기존 users 테이블 수정
-
 CREATE TABLE IF NOT EXISTS users (
                                      id INTEGER PRIMARY KEY AUTOINCREMENT,
                                      username TEXT UNIQUE NOT NULL,
                                      password TEXT NOT NULL,
                                      name TEXT NOT NULL,
-                                     birth TEXT,      -- 생년월일 추가
-                                     address TEXT,    -- 주소 추가
-                                     phone TEXT,      -- 전화번호  추가
-                                     email TEXT       -- 이메일 추가
+                                     birth TEXT,      -- 생년월일
+                                     address TEXT,    -- 주소
+                                     phone TEXT,      -- 전화번호
+                                     email TEXT,      -- 이메일
+                                     is_withdrawn INTEGER DEFAULT 0 -- 💡 [보완] 탈퇴 여부 플래그 필드 추가 (0: 활동, 1: 탈퇴)
 );
 
 -- 게시글 테이블
@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 -- 장바구니 테이블
-
 DROP TABLE IF EXISTS cart_items;
 CREATE TABLE cart_items (
                             user_id INTEGER NOT NULL,
@@ -43,4 +42,3 @@ CREATE TABLE cart_items (
                             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                             PRIMARY KEY(user_id, product_id)
 );
-

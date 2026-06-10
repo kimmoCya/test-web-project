@@ -1,87 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>전 고객 회원 관리 목록</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리 - Refresh Beverage Mall</title>
     <style>
-        body { font-family: sans-serif; margin: 40px; background-color: #f8fafc; }
-        .admin-title { font-size: 26px; font-weight: bold; color: #1e1b4b; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .back-link { display: inline-block; color: #4338ca; text-decoration: none; margin-bottom: 25px; font-weight: 500; }
-        .back-link:hover { text-decoration: underline; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif; -webkit-font-smoothing: antialiased; margin: 0; padding: 40px; background-color: #f8fafc; color: #1e293b; }
+        .admin-container { max-width: 1200px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+        .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; border-bottom: 2px solid #0f172a; padding-bottom: 20px; }
+        h2 { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0; }
+        .btn-home { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .btn-home:hover { color: #0f172a; text-decoration: underline; }
 
-        .user-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
-        .user-table th { background-color: #f1f5f9; color: #334155; font-weight: bold; padding: 14px; text-align: center; border-bottom: 2px solid #e2e8f0; }
-        .user-table td { padding: 14px; text-align: center; border-bottom: 1px solid #e2e8f0; color: #334155; vertical-align: middle; }
-        .user-table tr:hover { background-color: #f8fafc; }
+        .management-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .management-table th { background-color: #f1f5f9; color: #475569; font-weight: 700; padding: 16px 10px; border-bottom: 2px solid #e2e8f0; text-align: center; }
+        .management-table td { padding: 16px 10px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; color: #334155; }
+        .management-table tr:hover { background-color: #f8fafc; }
+        .prod-id { font-family: monospace; color: #94a3b8; font-weight: 600; }
 
-        .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 13px; color: white; }
-        .badge-user { background-color: #3b82f6; }
-        .badge-admin { background-color: #ef4444; }
+        /* 배지 스타일 */
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 800; }
+        .badge-active { background-color: #d1fae5; color: #059669; }
+        .badge-out { background-color: #fee2e2; color: #dc2626; text-decoration: line-through; }
 
-        select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 14px; background: white; }
-        .btn-kick { padding: 6px 14px; background-color: #dc2626; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .btn-kick:hover { background-color: #b91c1c; }
-        .inline-form { margin: 0; padding: 0; display: inline-block; }
+        .status-select { padding: 6px; font-size: 13px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 4px; background-color: #fff; }
+
+        .action-links button { font-size: 12px; padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 4px; background: #fff; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .btn-save-role { color: #0ea5e9; border-color: #bae6fd; }
+        .btn-save-role:hover { background-color: #e0f2fe; }
+        .btn-kick { color: #f43f5e; border-color: #fecaca; }
+        .btn-kick:hover { background-color: #fff1f2; color: #e11d48; }
+
+        .flex-form { display: flex; align-items: center; justify-content: center; gap: 5px; margin: 0; }
+
+        footer { margin-top: 50px; text-align: center; font-size: 13px; color: #94a3b8; }
     </style>
 </head>
 <body>
+<div class="admin-container">
+    <header class="board-header">
+        <h2>👥 쇼핑몰 가입 회원 명부</h2>
+        <a href="/admin" class="btn-home">⬅ 대시보드로 복귀</a>
+    </header>
 
-<div class="admin-title">👥 전 고객 회원 관리 목록</div>
-<a href="/admin" class="back-link">← 대시보드로 복귀</a>
-
-<table class="user-table">
-    <thead>
-    <tr>
-        <th style="width: 8%;">번호</th>
-        <th style="width: 15%;">아이디</th>
-        <th style="width: 15%;">이름</th>
-        <th style="width: 25%;">이메일</th>
-        <th style="width: 12%;">현재 권한</th>
-        <th style="width: 15%;">등급 변경</th>
-        <th style="width: 10%;">처분</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% if (users && users.length > 0) { %>
-        <% users.forEach(function(row) { %>
+    <main>
+        <table class="management-table">
+            <thead>
             <tr>
-                <td><%= row.id %></td>
-                <td style="font-weight: bold;"><%= row.username %></td>
-                <td><%= row.name %></td>
-                <td><%= row.email || '미등록' %></td>
-                <td>
-                    <% if (row.role === 'ADMIN') { %>
-                        <span class="badge badge-admin">ADMIN</span>
-                    <% } else { %>
-                        <span class="badge badge-user">USER</span>
-                    <% } %>
-                </td>
-
-                <td>
-                    <form action="/admin/users/update-role" method="POST" class="inline-form">
-                        <input type="hidden" name="userId" value="<%= row.id %>">
-                        <select name="newRole" onchange="this.form.submit()">
-                            <option value="USER" <%= row.role === 'USER' ? 'selected' : '' %>>일반 유저(USER)</option>
-                            <option value="ADMIN" <%= row.role === 'ADMIN' ? 'selected' : '' %>>관리자(ADMIN)</option>
-                        </select>
-                    </form>
-                </td>
-
-                <td>
-                    <form action="/admin/users/delete" method="POST" class="inline-form" onsubmit="return confirm('🚨 정말로 해당 회원을 강제 탈퇴시키겠습니까?')">
-                        <input type="hidden" name="userId" value="<%= row.id %>">
-                        <button type="submit" class="btn-kick">강퇴</button>
-                    </form>
-                </td>
+                <th style="width: 8%;">회원번호</th>
+                <th style="width: 12%;">아이디</th>
+                <th style="width: 10%;">이름</th>
+                <th style="width: 15%;">연락처</th>
+                <th style="width: 10%;">상태</th>
+                <th style="width: 25%;">권한 변경</th>
+                <th style="width: 20%;">강제 관리</th>
             </tr>
-        <% }); %>
-    <% } else { %>
-        <tr>
-            <td colspan="7" style="color: #64748b; padding: 30px;">가입된 회원 내역이 존재하지 않습니다.</td>
-        </tr>
-    <% } %>
-    </tbody>
-</table>
-
+            </thead>
+            <tbody>
+            <% if (users && users.length > 0) { %>
+                <% users.forEach(u => { %>
+                    <tr>
+                        <td class="prod-id">#<%= u.id %></td>
+                        <td style="font-weight: 700;"><%= u.username %></td>
+                        <td><%= u.name %></td>
+                        <td style="color: #64748b; font-size: 13px;"><%= u.phone || '미입력' %></td>
+                        <td>
+                            <!-- 💡 1번 기능에서 추가한 is_withdrawn 활용 -->
+                            <% if (u.is_withdrawn === 1) { %>
+                                <span class="badge badge-out">탈퇴함</span>
+                            <% } else { %>
+                                <span class="badge badge-active">활동중</span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <!-- 권한 변경 폼 -->
+                            <form action="/admin/users/update-role" method="POST" class="flex-form">
+                                <input type="hidden" name="userId" value="<%= u.id %>">
+                                <select class="status-select" name="newRole" <%= u.username === 'admin' ? 'disabled' : '' %>>
+                                    <option value="USER" <%= u.role === 'USER' ? 'selected' : '' %>>일반 회원</option>
+                                    <option value="ADMIN" <%= u.role === 'ADMIN' ? 'selected' : '' %>>관리자 (ADMIN)</option>
+                                </select>
+                                <% if (u.username !== 'admin') { %>
+                                    <button type="submit" class="action-links btn-save-role">적용</button>
+                                <% } %>
+                            </form>
+                        </td>
+                        <td>
+                            <!-- 강제 탈퇴 폼 -->
+                            <% if (u.username !== 'admin') { %>
+                                <form action="/admin/users/delete" method="POST" class="flex-form" onsubmit="return confirm('🚨 이 회원을 데이터베이스에서 완전히 강제 추방하시겠습니까?');">
+                                    <input type="hidden" name="userId" value="<%= u.id %>">
+                                    <button type="submit" class="action-links btn-kick">🚨 추방하기</button>
+                                </form>
+                            <% } else { %>
+                                <span style="font-size:12px; color:#94a3b8;">마스터 계정</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr><td colspan="7" style="padding: 50px; color: #94a3b8;">가입된 회원이 없습니다.</td></tr>
+            <% } %>
+            </tbody>
+        </table>
+    </main>
+    <footer>&copy; 2026 시스템 관리 센터. All rights reserved.</footer>
+</div>
 </body>
 </html>

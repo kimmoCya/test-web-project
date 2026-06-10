@@ -3,175 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>고객센터 게시판</title>
+    <title>고객센터 게시판 - Refresh Beverage Mall</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* 💡 네이버 카페 리스트 정밀 복각 CSS */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, "Apple SD Gothic Neo", sans-serif;
-            margin: 0;
-            padding: 40px;
-            background-color: #f4f6fa;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            margin: 0; padding: 40px; background-color: #f8fafc; color: #334155;
         }
 
         .board-container {
-            max-width: 850px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid #e3e7ee;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-
-        h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #000;
-            margin-top: 0;
-            margin-bottom: 20px;
+            max-width: 1000px; margin: 0 auto; background: white; padding: 40px;
+            border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
         .board-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #000;
-            padding-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; border-bottom: 2px solid #0f172a; padding-bottom: 20px;
         }
-        .btn-home { color: #666; text-decoration: none; font-size: 13px; font-weight: 500; }
-        .btn-home:hover { text-decoration: underline; color: #333; }
+
+        h2 { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0; }
 
         .btn-write {
-            background-color: #2563eb; color: white !important; padding: 7px 14px;
-            border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px;
+            background-color: #0ea5e9; color: white !important; padding: 10px 18px;
+            border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;
+            display: flex; align-items: center; gap: 8px; transition: 0.2s;
         }
-        .btn-write:hover { background-color: #1d4ed8; }
+        .btn-write:hover { background-color: #0284c7; transform: translateY(-1px); }
 
-        .cafe-list-container {
-            display: flex;
-            flex-direction: column;
+        /* 게시판 테이블 모던화 */
+        .board-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+        .board-table th {
+            background-color: #f1f5f9; color: #475569; font-weight: 700;
+            padding: 15px 10px; border-bottom: 2px solid #e2e8f0; text-align: center;
         }
+        .board-table td {
+            padding: 15px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle;
+        }
+        .board-table tr:hover { background-color: #f8fafc; cursor: pointer; }
 
-        .cafe-list-item {
-            display: flex;
-            align-items: center;
-            padding: 14px 10px;
-            border-bottom: 1px solid #f2f3f5;
-            font-size: 14px;
-            transition: background-color 0.1s;
-        }
-        .cafe-list-item:hover {
-            background-color: #fafafa;
-        }
+        .post-link { text-decoration: none; color: #1e293b; display: block; width: 100%; }
 
-        .col-title {
-            flex-grow: 1;
-            padding-right: 20px;
-            display: flex;
-            align-items: center;
+        /* 💡 계층형 답글 스타일 핵심 */
+        .reply-indent {
+            padding-left: 25px; color: #64748b; font-weight: 500;
+            display: flex; align-items: center; gap: 6px;
         }
-        .post-title-link {
-            color: #333;
-            text-decoration: none;
-        }
-        .post-title-link:hover {
-            color: #000;
-            text-decoration: underline;
-        }
+        .reply-icon { color: #cbd5e1; }
 
-        /* 💡 댓글 횟수를 가독성 있게 표현하기 위한 포인트 핑크 배지 스타일 */
-        .comment-count-badge {
-            color: #db2777; /* 위시리스트와 깔끔하게 매칭되는 루비 핑크 컬러 */
-            font-weight: bold;
-            margin-left: 6px;
-            font-size: 13px;
-        }
+        .comment-count { color: #f43f5e; font-size: 13px; font-weight: bold; margin-left: 5px; }
+        .author-badge { font-weight: 600; color: #475569; }
+        .date-text { color: #94a3b8; font-size: 13px; }
 
-        .col-writer {
-            width: 130px;
-            text-align: right;
-            color: #333;
-            font-weight: 500;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 3px;
-        }
-        .cafe-badge {
-            color: #10b981;
-            font-size: 13px;
-            font-weight: bold;
-        }
+        .btn-home { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .btn-home:hover { color: #0f172a; }
 
-        .col-date {
-            width: 70px;
-            text-align: right;
-            color: #666;
-            font-size: 13px;
-            margin-left: 15px;
-        }
-
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 12px;
-            color: #94a3b8;
-        }
+        footer { margin-top: 40px; text-align: center; font-size: 13px; color: #cbd5e1; }
     </style>
 </head>
 <body>
 
 <div class="board-container">
-    <header>
+    <header class="board-header">
         <h2>🙋‍♂️ 고객센터 게시판</h2>
-        <div class="board-header">
+        <div style="display: flex; gap: 20px; align-items: center;">
             <a href="/" class="btn-home">🏠 홈으로</a>
-            <a href="/board/new" class="btn-write">✏️ 문의글 쓰기</a>
+            <a href="/board/new" class="btn-write"><i class="fa-solid fa-pen"></i> 문의글 쓰기</a>
         </div>
     </header>
 
-    <main class="cafe-list-container">
-        <% if (posts && posts.length > 0) { %>
-            <% posts.forEach(post => { %>
-
-                <% if (!post.parent_id) { %>
-                    <div class="cafe-list-item">
-
-                        <div class="col-title">
-                            <a href="/board/view/<%= post.id %>" class="post-title-link">
-                                <%= post.title %>
-                            </a>
-
-                            <% if (post.comment_count > 0) { %>
-                                <span class="comment-count-badge">[<%= post.comment_count %>]</span>
+    <main>
+        <table class="board-table">
+            <thead>
+            <tr>
+                <th style="width: 8%;">번호</th>
+                <th style="width: 57%;">제목</th>
+                <th style="width: 15%;">작성자</th>
+                <th style="width: 20%;">작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% if (posts && posts.length > 0) { %>
+                <% posts.forEach(post => { %>
+                    <tr onclick="location.href='/board/view/<%= post.id %>'">
+                        <td style="text-align: center; color: #94a3b8; font-family: monospace;">#<%= post.id %></td>
+                        <td>
+                            <% if (post.parent_id) { %>
+                                <div class="reply-indent">
+                                    <i class="fa-solid fa-turn-up fa-rotate-90 reply-icon"></i>
+                                    <span class="post-link"><%= post.title %></span>
+                                </div>
+                            <% } else { %>
+                                <span class="post-link" style="font-weight: 600;"><%= post.title %></span>
                             <% } %>
-                        </div>
-
-                        <div class="col-writer">
-                            <span><%= post.author || '익명' %></span>
-                            <span class="cafe-badge">🌱</span>
-                        </div>
-
-                        <div class="col-date">
-                            <%= post.created_at ? post.created_at.substring(11, 16) : '14:18' %>
-                        </div>
-
-                    </div>
-                <% } %>
-
-            <% }) %>
-        <% } else { %>
-            <div style="text-align: center; color: #94a3b8; padding: 50px 0; font-size: 14px;">
-                📭 등록된 고객 문의 사항이 없습니다.
-            </div>
-        <% } %>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="author-badge"><%= post.author %></span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="date-text"><%= post.created_at.substring(5, 16) %></span>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr><td colspan="4" style="padding: 50px; text-align: center; color: #94a3b8;">등록된 문의 사항이 없습니다.</td></tr>
+            <% } %>
+            </tbody>
+        </table>
     </main>
 
-    <footer>
-        &copy; 2026 고객센터 시스템. All rights reserved.
-    </footer>
+    <footer>&copy; 2026 Refresh Beverage Mall. All rights reserved.</footer>
 </div>
 
 </body>
